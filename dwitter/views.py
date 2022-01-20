@@ -21,14 +21,17 @@ def dashboard(request):
             return redirect('dwitter:dashboard')
 
     followed_dweets = Dweet.objects.filter(user__profile__in=request.user.profile.follows.all()).order_by('-created_at')
+    
     page = request.GET.get('page')
+    
     paginator = Paginator(followed_dweets, 5)
+    
     try:
         followed_dweets = paginator.page(page)
     except PageNotAnInteger:
         followed_dweets = paginator.page(1)
     except EmptyPage:
-        followd_dweets = paginator.page(paginator.num_pages)
+        followed_dweets = paginator.page(paginator.num_pages)
 
     return render(request, 'dwitter/dashboard.html', {'form':form, 'dweets':followed_dweets},)
 
@@ -61,9 +64,11 @@ def profile(request, pk):
         return redirect('dwitter:login')
         
     profile = Profile.objects.get(id=pk)
+
     context = {'profile':profile}
 
     if request.method == 'POST':
+        
         current_user_profile = request.user.profile
         data = request.POST
         action = data.get('follow')
