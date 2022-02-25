@@ -11,9 +11,6 @@ def dashboard(request):
         return redirect('dwitter:login')
 
     form = DweetForm(request.POST or None)
-
-    if request.method == 'POST':
-        form = DweetForm(request.POST)
         if form.is_valid():
             dweet = form.save(commit=False)
             dweet.user = request.user
